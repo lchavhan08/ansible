@@ -1,0 +1,6 @@
+---
+- name: child module
+  file:
+   path: /home/ubuntu/surya
+   state: directory
+...

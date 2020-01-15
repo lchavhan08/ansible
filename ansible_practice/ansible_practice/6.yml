@@ -1,0 +1,17 @@
+---
+- name: user creation and freaction files 
+  hosts: all
+  tasks:
+   - name: user creation
+     user:
+      name: "{{name}}"
+      password: "{{passwd}}"
+      home: "{{home_dir}}"
+   - name: create files 
+     file:
+      name: /home/dxc/hello
+      state: touch
+
+ 
+
+

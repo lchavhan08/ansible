@@ -1,0 +1,14 @@
+---
+- name: deferent hosts
+  hosts: 172.31.37.162
+  tasks:
+   - name: install tomcat
+     apt:
+      name: tomcat8
+      state: absent
+
+- name: host 2
+  hosts: 172.31.33.134
+  tasks:
+   - name: command module for the server 2
+     command: ls

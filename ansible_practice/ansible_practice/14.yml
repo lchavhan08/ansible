@@ -1,0 +1,33 @@
+---
+- name: handlers example
+  hosts: all
+  tasks:
+   - name: apache2 install
+     apt:
+      name: apache2
+      state: present
+      update_cache: yes
+     notify: check url response
+   - name: edit index.html
+     copy:
+       content: "welcome"
+       dest: /var/www/html/index.html
+     notify: restart apache2
+     register: op
+   - name: debug module
+     debug: 
+      var: op
+  handlers: 
+   - name: restart apache2
+     service:
+      name: apache2
+      state: restarted
+   - name: check url response
+     uri:
+      name: "{{item}}"
+      status: 200
+     with_items:
+      - http://52.66.213.238
+      - http://3.6.92.29
+
+

@@ -1,0 +1,21 @@
+---
+- name: register variable usage
+  hosts: server
+  tasks:
+   - name: check for dir --> f1
+     stat: 
+       path: /home/ubuntu/f1
+     register: output
+   - name: display output
+     debug:
+       var: output
+   - name: create a file
+     file:
+       name: /home/ubuntu/f1
+       state: touch
+     when: output.stat.exists == false
+   - name: create a directory
+     file:
+       path:  /home/ubuntu/foo
+       state: directory
+     when: output.stat.isdir == false

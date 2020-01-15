@@ -1,0 +1,9 @@
+---
+- name: host_var example
+  hosts: 172.31.37.162
+  tasks: 
+   - name: install tree
+     apt:
+      name: "{{name}}"
+      state: "{{state}}"
+      update_cache: "{{update}}"

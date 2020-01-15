@@ -1,0 +1,200 @@
+Ansible
+--------
+. sudo passwd ubuntu --> update the password
+. sudo vi /etc/ssh/sshd_config - change --> password_authentication yes
+. sudo service ssh restart
+. install manager + host machines
+. sudo apt-get update
+. sudo apt-get install -y python2.7 python-pip
+. ssh-copy-id -i 'file_name' user@10.0.0.0
+. sudo apt-get install software-properties-common
+. sudo apt-add-repository ppa:ansible/ansible
+. sudo apt-get install -y ansible
+. sudo vi /etc/ansible/hosts
+
+ansible commands
+----------------
+. Ad-hoc commands.
+. Playbooks					 
+. Roles
+. ansible is created using python and it uses inbuilt python modules for  the remote configuration of the servers. these
+  modules are used in ad-hoc commands playbook and roles.
+
+importent modules in ansible
+----------------------------
+. command - used for executing linux command on the manager nodes
+. shell   - used for linux commands which involves redirection & piping
+. ping    - conncetion repsonse of the remote server
+. user    - user management where we can create users, assigning home dir default workign shell etc
+. file    - used for creating/deleting files/dir on the managed nodes
+. copy    - copying file/dir from controller to the managed nodes
+. fetch   - used copy managed node - to the controller
+. apt     - package management on the managed node  ((Advanced Package Tool)
+. yum     - this is also used for package managemnt, it works on cent os, fedora, redhat linux
+. service - start/stop/restart -- on the managed nodes
+. uri     - remote url is reachable or not from the managed nodes 
+. git     - version controlling 
+. debug   - displaying the output of a module
+. include - calling child playbook from parent paybook
+. start   - used for capturing infomarion about files/dir on the managed hosts
+. file    - used to create/deleting the files.
+. 
+
+day 2
+--------------------------------------------------------
+
+. ansible all/group/ip_address
+. ansible all -i /etc/ansible/hosts -m module -a 'free'
+. ansible all (host_file_default) (default_module_command) -a 'free'
+. ansible all -a(agruement) 'free'
+. command module is the default module of the ansible, and it not mandatory to use -m command when working on this module
+. | and > is not supported by command module --> shell supported
+. ansible all -m shell -a 'ls -la > file'
+. ansible all -m user -a 'name=surya password=admin' 
+. admin:x (passwd):1001(useid):100(grouid)::/home/admin(home):/bin/sh(shell)
+. ansible all -m user -a 'name=admin password=admin' -b (become user )
+. ansible all -m user -a 'name=aws password=admin home=/home/ uid=123 shell=/bin/bash'
+. ansible all -m file -a 'name=/home/ubuntu/hello state=touch'
+. ansible all -m file -a 'name=/home/ubuntu/dir state=directory'
+. ansible all -m file -a 'name=/home/ubuntu/dir state=absent'
+. ansible all -m file -a 'name=/home/ubuntu/hello state=absent'
+. ansible all -m file -a 'name=/home/ubuntu/hello state=directory owner=admin mode=770' -b
+. ansible all -m file -a 'name=/home/ubuntu/hello state=directory owner=admin group=admin mode=770' -b
+. ansible all -m copy -a 'src=/etc/passwd dest=/tmp' -b 
+. ansible all -m copy -a 'src=/etc/passwd dest=/tmp owner=root group=admin mode=765' -b
+. ansible all -m copy -a 'content="hello intelliq" dest=/tmp/passwd' -b
+. ansible all -m fetch -a 'src=/home/ubuntu/file dest=' --> from manager -> controller
+. apt -- install/un install s/w on the managed nodes
+. ansible all -m tomcat -a 'name=tomcat state=latest' -b
+. state=present --> install
+. state=absent --> uninstallation
+. state=latest --> upgrade
+. to update the apt repository before installing the s/f we can use the option update_cache=yes
+. ansible all -m apt -a 'name=apache2 state=latest' -b
+. ansible all -m copy -a 'content="hello intelliq" dest=/var/www/html/index.html' -b
+. ansible all -m uri -a 'url=www.google.com status=200'
+
+Playbooks
+---------
+
+. Ad-hoc --> not reusable
+. deferenciate 
+.  ansible-playbook file.yml --syntax-check
+. default port is 80 -- no need to provide it manually
+
+Variable in ansible
+-------------------
+. global - these variable are passed from cmd using  --extra-vars, they have highest level of priority
+. ansible all -m apt -a '' --exra-var "name= "
+
+. host - 
+
+. play - defined within the playbook and they can effect only a single play
+. they have the last lever of priority
+
+host scope variable
+. thes variable are classified into two types
+  variable to work on group of host
+  vairables to work oa a single host
+. variables to work on a group of a host
+	these varibale created in a folder called group_vars this folder shold be created in the the same location where all playboos are present
+. in this folder create a file, name is same as group name in the inventory file and create the variables
+
+webserver -- group
+---
+  a: git
+  b: present
+  c: yes
+...
+
+. host_vars we have to create a file whose name is same as ip adress is same as from the invenory file 
+  and in this file we should create variable these variables will work only on that machine.
+
+Looping
+-------
+. we can make specific module run multiple times using loops, loops can we implemented with "{{itme}}" with_items and with_sequence
+. ansible playbooks for installing multiple s/w packages using with_items.
+
+---
+- name: loop exaple
+  hosts: all
+  tasks: 
+   - name: loop installing the multiple software
+     apt:
+	  name: "{{item}}"
+	  state: present
+	 with_items:
+	  - tree
+	  - git
+	  - firewalld 
+. 	  
+
+mvn compile -X --> debug logs
+
+
+handlers
+--------
+
+. handlers are modules only if someother module executed successful and it has mad some changes 
+. handlers are executed only after all the asks are executed.
+. handlers are executed in the order they are mentioned in the handler section and not in the order that they are called in the task section 
+. even if handler is called mulptiple times in the task section it will be executed only once.
+  
+
+Error handling -- exception handling
+------------------------------------
+1. whenever a specific module in ansible fails but program execution stops over there if we wann cont playook even after encountring an error
+   we can use the error handling. the module might generate an error shoud be given in the block section if it fails then controller come to the recue section
+2. always section executed every time, irrespctive of block/recue is success/fails
+
+contional statement
+-------------------
+
+debug
+-----
+
+--- 
+- name: Debug module
+  hosts: all
+  tasks:
+   - name: crate a user
+     user:
+	  name:
+	  password:
+	 register: a ---> store the output of the module to the vairables
+	 
+Tagging in ansible
+------------------
+Tags are used for more modular control over the flow of execution of playbook
+this is done by aliases to the modules
+
+to execute all the untagged modules from the above playbook
+
+Roles
+-----
+. organised folder structure
+
+
+$ tree apache/
+
+apache/
+
+├── README.md --> simple text file --> information about role
+├── defaults
+│   └── main.yml --> store information about application, it also contails variable of lesser priority
+├── files --> all stic configuration files, that are necessaryfor configuring, the s/w application are stored  
+├── handlers
+│   └── main.yml --> modules which are executed, only if some other module is executed succesfully 
+├── meta 
+│   └── main.yml --> data about a data is called meta, order of the role date and time when it was created, version it supports 
+├── tasks --> actual task are store 
+│   └── main.yml 
+├── templates
+├── tests
+│   ├── inventory
+│   └── test.yml
+└── vars --> storing vairable -- has higher priorties than the var present int he 
+    └── main.yml
+
+
+

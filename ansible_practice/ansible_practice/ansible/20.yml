@@ -1,0 +1,19 @@
+---
+- name: Tagging in ansible
+  hosts: server
+  tasks:
+    - name: install tree
+      apt:
+       name: tree
+       state: latest
+      tags: tree_install
+    - name: user creation
+      user:
+       name: hari
+       password: host
+      tags: user_creation
+    - name: copy
+      copy:
+       src: 19.yml
+       dest: /home/ubuntu 
+

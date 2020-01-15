@@ -1,0 +1,31 @@
+---
+- name: CI/CD with ansible
+  hosts: all
+  tasks:
+   - name: install s/w
+     apt: 
+      name: "{{item}}"
+      state: present
+      update_cache: yes
+     with_items:
+      - openjdk-8-jdk
+      - git
+      - maven
+      - tomcat8
+      - tomcat8-admin
+- name: clone git repo
+  hosts: all
+  tasks:
+   - name: git clone
+     git:
+      repo: https://github.com/lchavhan/jpetstore-6.git
+      dest: /home/ubuntu/project-code
+      clone: no
+      update: no
+   - name: continouos build
+     shell: cd /home/ubuntu/project-code; mvn package 
+   - name: copy to the local system
+     fetch:
+      src: /home/ubuntu/project-code/target/jpetstore.war
+      dest: /home/ubuntu/ansible
+      become: yes

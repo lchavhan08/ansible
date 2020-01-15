@@ -1,0 +1,13 @@
+---
+- name: play variables
+  hosts: all
+  vars:
+   app_name: apache2
+   app_uninstall: present
+  tasks:
+   - name: usage of local variables
+     apt:
+       name: "{{app_name}}"
+       state: "{{app_uninstall}}"
+       update_cache: yes
+

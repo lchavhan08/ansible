@@ -1,0 +1,9 @@
+---
+- name: global variables
+  hosts: all
+  tasks:
+   - name: usage of global variables
+     apt:
+      name: "{{name}}"
+      state: "{{state}}"
+

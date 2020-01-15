@@ -1,0 +1,12 @@
+---
+- name: loop example
+  hosts: all
+  tasks:
+   - name: install tomcat8 and check tht response
+     apt: 
+      name: tomcat8
+      state: present
+      update_cache: yes
+     with_items:
+      - {name: "http://52.66.213.238:8080/", state: absent}
+

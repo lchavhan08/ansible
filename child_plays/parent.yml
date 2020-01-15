@@ -1,0 +1,10 @@
+--- 
+- name: include module examples
+  hosts: server
+  tasks:
+   - name: calling child modules
+     include: "{{item}}"
+     with_items:
+      - 1.yml
+      - 2.yml
+      - 3.yml

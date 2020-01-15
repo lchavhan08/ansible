@@ -1,0 +1,23 @@
+---
+- name: installation and configure tomcat8
+  hosts: all
+  tasks:
+  - name: install tomcat8
+    apt:
+     name: tomcat8
+     state: present
+  - name: configure tomcat instllation
+    replace:
+     regexp: 8080
+     replace: 9090
+     path: /etc/tomcat8/server.xml
+    become: yes
+  - name: tomcat restart
+    service: 
+     name: tomcat8
+     state: restarted
+  - name: check resposnse
+    uri:
+     url: http://13.126.191.215:9090/
+     status: 200
+

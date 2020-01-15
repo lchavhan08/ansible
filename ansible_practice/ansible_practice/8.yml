@@ -1,0 +1,9 @@
+--- 
+- name: host variables
+  hosts: appserver
+  tasks:
+   - name: host variable usage
+     apt: 
+      name: "{{a}}"
+      state: "{{b}}"
+      update_cache: yes

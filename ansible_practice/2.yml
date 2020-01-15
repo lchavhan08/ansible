@@ -1,0 +1,12 @@
+---
+- name: install git and clone a repo
+  hosts: all
+  tasks:
+  - name: git install
+    apt:
+     name: git
+     state: present
+  - name: clone the repo
+    git:
+     repo: https://github.com/lchavhan/jpetstore-6.git 
+     dest: /home/ubuntu/myrepo    

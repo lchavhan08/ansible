@@ -1,0 +1,6 @@
+---
+- name: edit apache home page
+  copy:
+   content: "welcome to dxc"
+   dest: /var/www/html/index.html
+...

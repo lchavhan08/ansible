@@ -1,0 +1,12 @@
+---
+- name: condition statement
+  hosts: all
+  vars:
+   - a: 20
+  tasks:
+   - name: condition for execution
+     apt:
+      name: tree
+      state: clean
+     when: a == 20
+

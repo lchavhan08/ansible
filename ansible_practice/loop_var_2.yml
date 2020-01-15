@@ -1,0 +1,15 @@
+---
+- name: loop example
+  hosts: all
+  tasks:
+   - name: install application
+     apt:
+      name: "{{item.name}}"
+      state: "{{item.state}}"
+      update_cache: "{{item.ip}}"
+     with_items:
+       - {name: tree, state: absent, ip: no }
+       - {name: openjdk-8-jdk, state: absent, ip: no}
+       - {name: git, state: absent, ip: yes}
+
+

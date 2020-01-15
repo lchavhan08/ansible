@@ -1,0 +1,6 @@
+---
+- name: create dir using child
+  hosts: server
+  tasks:
+   - name: call child module
+     include: 21.yml

@@ -1,0 +1,16 @@
+---
+- name: loop example
+  hosts: all
+  tasks:
+   - name: install application
+     apt:
+      name: "{{item}}"
+      state: present
+      update_cache: yes
+     with_items:
+       - tree
+       - openjdk-8-jdk
+       - git
+       - firewalld       
+
+

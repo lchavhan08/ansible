@@ -1,0 +1,9 @@
+---
+- name: file module
+  hosts: all
+  tasks:
+   - name: file creation
+     file:
+       name: /home/ubuntu/shilpa
+       state: touch
+...

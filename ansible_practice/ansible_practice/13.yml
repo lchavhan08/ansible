@@ -1,0 +1,16 @@
+---
+- name: Jenkins configuration
+  hosts: 172.31.33.134
+  tasks: 
+   - name: Jenkins install
+     get_url:
+       url: https://pkg.jenkins.io/debian/jenkins.io.key
+       dest: /home/ubuntu/
+   - name: shell tasks
+     shell:  sh http://pkg.jenkins.io/debian-stable binary/
+     become: yes
+   - name: update repository
+     apt:
+      name: jenkins
+      state: latest
+      update_cache: yes
